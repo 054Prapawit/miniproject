@@ -125,7 +125,7 @@ export default function Dashboard() {
       {
         label: "Distance",
         data: allData.map((dataPoint) => dataPoint.distance),
-        backgroundColor: "rgba(255, 99, 132, 0.6)",
+        backgroundColor: "rgb(255, 99, 132,)",
       },
     ],
   } : null;
