@@ -1,9 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Pie } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
   ArcElement,
+  Title,
   Tooltip,
   Legend,
 } from "chart.js";
@@ -13,7 +17,11 @@ import styles from "./Dashboard.module.css";
 export const dynamic = "force-dynamic";
 
 ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
   ArcElement,
+  Title,
   Tooltip,
   Legend
 );
@@ -78,7 +86,51 @@ export default function Dashboard() {
     }],
   } : null;
 
-  const pieChartOptions = {
+  const barChartData1 = allData.length > 0 ? {
+    labels: allData.map((dataPoint) =>
+      new Date(dataPoint.date).toLocaleString("th-TH", {
+        timeZone: "Asia/Bangkok",
+        dateStyle: "short",
+        timeStyle: "short",
+      })
+    ),
+    datasets: [
+      {
+        label: "LDR",
+        data: allData.map((dataPoint) => dataPoint.ldr),
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
+      },
+      {
+        label: "VR",
+        data: allData.map((dataPoint) => dataPoint.vr),
+        backgroundColor: "rgba(153, 102, 255, 0.6)",
+      },
+    ],
+  } : null;
+
+  const barChartData2 = allData.length > 0 ? {
+    labels: allData.map((dataPoint) =>
+      new Date(dataPoint.date).toLocaleString("th-TH", {
+        timeZone: "Asia/Bangkok",
+        dateStyle: "short",
+        timeStyle: "short",
+      })
+    ),
+    datasets: [
+      {
+        label: "Temperature",
+        data: allData.map((dataPoint) => dataPoint.temp),
+        backgroundColor: "rgba(255, 159, 64, 0.6)",
+      },
+      {
+        label: "Distance",
+        data: allData.map((dataPoint) => dataPoint.distance),
+        backgroundColor: "rgba(255, 99, 132, 0.6)",
+      },
+    ],
+  } : null;
+
+  const chartOptions = {
     responsive: true,
     plugins: {
       legend: {
@@ -87,6 +139,19 @@ export default function Dashboard() {
       title: {
         display: true,
         text: "Latest Sensor Data Visualization",
+      },
+    },
+  };
+
+  const barChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Sensor Data Trends Over Time",
       },
     },
   };
@@ -193,7 +258,7 @@ export default function Dashboard() {
           {lastData.length > 0 && pieChartData1 ? (
             <div className={styles.chartContainer}>
               <h2>LDR and VR</h2>
-              <Pie data={pieChartData1} options={pieChartOptions} />
+              <Pie data={pieChartData1} options={chartOptions} />
             </div>
           ) : (
             <p>No data available for LDR and VR chart</p>
@@ -208,13 +273,42 @@ export default function Dashboard() {
           {lastData.length > 0 && pieChartData2 ? (
             <div className={styles.chartContainer}>
               <h2>Temperature and Distance</h2>
-              <Pie data={pieChartData2} options={pieChartOptions} />
+              <Pie data={pieChartData2} options={chartOptions} />
             </div>
           ) : (
             <p>No data available for Temperature and Distance chart</p>
           )}
         </div>
-        {/* Trends data not converted to pie chart as it's typically not suitable */}
+        <div
+          className="tab-pane fade"
+          id="trend-ldr-vr"
+          role="tabpanel"
+          aria-labelledby="trend-ldr-vr-tab"
+        >
+          {allData.length > 0 && barChartData1 ? (
+            <div className={styles.chartContainer}>
+              <h2>LDR and VR Trends</h2>
+              <Bar data={barChartData1} options={barChartOptions} />
+            </div>
+          ) : (
+            <p>No data available for the LDR and VR bar chart</p>
+          )}
+        </div>
+        <div
+          className="tab-pane fade"
+          id="trend-temp-distance"
+          role="tabpanel"
+          aria-labelledby="trend-temp-distance-tab"
+        >
+          {allData.length > 0 && barChartData2 ? (
+            <div className={styles.chartContainer}>
+              <h2>Temperature and Distance Trends</h2>
+              <Bar data={barChartData2} options={barChartOptions} />
+            </div>
+          ) : (
+            <p>No data available for the Temperature and Distance bar chart</p>
+          )}
+        </div>
       </div>
       
       <h2 className={`${styles.heading} text-center my-4`}>
