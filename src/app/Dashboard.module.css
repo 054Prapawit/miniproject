@@ -1,7 +1,7 @@
 /* Dashboard.module.css */
 .dashboard {
   padding: 20px;
-  background-color: rgb(255, 255, 255); /* Light green background */
+  background-color: rgb(226, 248, 255); /* Light green background */
   min-height: 100vh;
 }
 
@@ -13,7 +13,7 @@
   margin: 0 auto;
   margin-top: 20px;
   padding: 20px;
-  background-color: #ffffff; /* Light green background */
+  background-color: rgb(226, 248, 255); /* Light green background */
   border: 2px solid #ff0000; /* Slightly darker green border */
   border-radius: 12px;
   width: 50%;

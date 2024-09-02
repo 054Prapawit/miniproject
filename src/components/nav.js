@@ -80,19 +80,48 @@ const Navbar = () => {
           </ul>
           <form className="d-flex align-items-center">
           <button
-  type="button"
-  className="btn me-2"
-  style={{
-    background: 'linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet)',
-    color: 'white',
-    border: 'none',
-  }}
-  onClick={() => updateLEDStatus('RGB_ON', setLEDStatus)}
+            type="button"
+            className="btn me-2"
+              style={{
+                background: 'linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet)',
+                color: 'white',
+                border: '2px solid white', // เพิ่มกรอบสีขาวให้ปุ่ม
+                fontWeight: 'bold', // ทำให้ตัวหนังสือหนาขึ้น  
+                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
+              }}
+            onClick={() => updateLEDStatus('RGB_ON', setLEDStatus)}
 >
-  Open System
-</button>
-            <button type="button" className={`btn btn-danger me-2`} onClick={() => updateLEDStatus('BUZZER_ON', setLEDStatus)}>Buzzer</button>
-            <button type="button" className={`btn btn-danger`} onClick={() => updateLEDStatus('OFF', setLEDStatus)}>Off</button>
+              Open System
+          </button>
+          <button
+            type="button"
+            className="btn me-2"
+              style={{
+              background: 'linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet)',
+              color: 'white',
+              border: '2px solid white', // เพิ่มกรอบสีขาวให้ปุ่ม
+              fontWeight: 'bold', // ทำให้ตัวหนังสือหนาขึ้น
+              textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
+            }}
+          onClick={() => updateLEDStatus('BUZZER_ON', setLEDStatus)}
+>
+              Buzzer
+          </button>
+          <button
+            type="button"
+              className="btn"
+                style={{
+                background: 'linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet)',
+                color: 'white',
+                border: '2px solid white', // เพิ่มกรอบสีขาวให้ปุ่ม
+                fontWeight: 'bold', // ทำให้ตัวหนังสือหนาขึ้น
+                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
+            }}
+          onClick={() => updateLEDStatus('OFF', setLEDStatus)}
+>
+              Off
+          </button>
+
             <span className={`ms-3 ${ledStatus ? styles.statusOn : styles.statusOff}`}>
               {ledStatus ? 'LED is ON' : 'LED is OFF'}
             </span>

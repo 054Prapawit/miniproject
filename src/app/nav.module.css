@@ -1,6 +1,6 @@
 /* Button Styles */
 .btnCustom, .btnDanger {
-  color: #ffffff; /* Text color white */
+  color: rgb(226, 248, 255); /* Text color white */
   padding: 10px 25px;
   border-radius: 25px; /* Rounded corners */
   font-size: 1.2rem; /* Adjust font size here */
@@ -80,3 +80,4 @@
   background-color: #dc3545;
   color: #fff;
 }
+
