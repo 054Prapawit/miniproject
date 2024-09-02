@@ -26,7 +26,7 @@ export async function POST(req) {
 
     // Insert the RGB control command into the database
     await client.query(`
-      INSERT INTO "Pp058" ("command", "date")
+      INSERT INTO "OHM054" ("command", "date")
       VALUES ($1, NOW())
     `, ['RGB_ON']);
 
@@ -35,7 +35,7 @@ export async function POST(req) {
     // Fetch the latest command from the database
     const result = await client.query(`
       SELECT "command", "date"
-      FROM "Pp058"
+      FROM "OHM054"
       ORDER BY "date" DESC
       LIMIT 1
     `);
