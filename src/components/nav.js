@@ -59,7 +59,12 @@ const Navbar = () => {
     <nav className={`navbar navbar-expand-lg ${styles.navbarCustom}`}>
       <div className="container-fluid">
         <Link className="navbar-brand d-flex align-items-center" href="./">
-          <span className={styles.navbarBrandText}>IohmRGB</span>
+          <Image
+            src="/logo.png" // ใส่พาธรูปภาพที่คุณต้องการใช้แทนที่ "IohmRGB"
+            alt="Logo"
+            width={100} // กำหนดขนาดตามที่คุณต้องการ
+            height={100}
+          />
         </Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon" />
