@@ -216,7 +216,7 @@ export default function Dashboard() {
             aria-controls="temp-distance"
             aria-selected="false"
           >
-            Temperature and Distance
+            อุณหภูมิ และ ระยะห่าง
           </button>
         </li>
       </ul>
@@ -284,7 +284,7 @@ export default function Dashboard() {
       </div>
       
       <h2 className={`${styles.heading} text-center my-4`}>
-        Latest Data
+        ข้อมูลล่าสุด
       </h2>
       <div className="table-responsive">
         <table
