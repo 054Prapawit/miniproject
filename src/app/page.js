@@ -1,11 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Bar } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
+  ArcElement,
   Title,
   Tooltip,
   Legend,
@@ -19,6 +20,7 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
+  ArcElement,
   Title,
   Tooltip,
   Legend
@@ -27,13 +29,11 @@ ChartJS.register(
 export default function Dashboard() {
   const [lastData, setLastData] = useState([]);
   const [allData, setAllData] = useState([]);
+  const [attackCount, setAttackCount] = useState(null);
 
   async function fetchLastData() {
     try {
-      const res = await fetch("/api/latestData"); // เรียก API ที่ให้ข้อมูลล่าสุดจากเซ็นเซอร์ VR ADC
-      if (!res.ok) {
-        throw new Error(`Error: ${res.status}`);
-      }
+      const res = await fetch("/api/lastestData");
       const data = await res.json();
       setLastData(data);
       console.log("Latest Data:", data);
@@ -44,10 +44,7 @@ export default function Dashboard() {
 
   async function fetchAllData() {
     try {
-      const res = await fetch("/api/alldata"); // เรียก API ที่ให้ข้อมูลทั้งหมดจากเซ็นเซอร์ VR ADC
-      if (!res.ok) {
-        throw new Error(`Error: ${res.status}`);
-      }
+      const res = await fetch("/api/alldata");
       const data = await res.json();
       setAllData(data);
       console.log("All Data:", data);
@@ -56,18 +53,40 @@ export default function Dashboard() {
     }
   }
 
-  // สร้างข้อมูลกราฟสำหรับข้อมูลล่าสุด
-  const barChartData = lastData.length > 0 ? {
-    labels: ["Distance"],
+  async function fetchAttackCount() {
+    try {
+      const res = await fetch("/api/attackCount");
+      const data = await res.json();
+      setAttackCount(data.att);
+      console.log("Attack Count:", data.att);
+    } catch (error) {
+      console.error("Error fetching attack count:", error);
+    }
+  }
+
+  const pieChartData1 = lastData.length > 0 ? {
+    labels: ["LDR", "VR"],
     datasets: [{
-      label: "Distance",
-      data: [lastData[0]?.distance ?? 0], // ใช้ค่าระยะทางจากเซ็นเซอร์ VR ADC
-      backgroundColor: "rgba(255, 99, 132, 0.6)",
+      data: [lastData[0].ldr, lastData[0].vr],
+      backgroundColor: [
+        "rgba(75, 192, 192, 0.6)",
+        "rgba(153, 102, 255, 0.6)",
+      ],
     }],
   } : null;
 
-  // สร้างข้อมูลกราฟสำหรับข้อมูลแนวโน้มทั้งหมด
-  const barChartTrendData = allData.length > 0 ? {
+  const pieChartData2 = lastData.length > 0 ? {
+    labels: ["Temperature", "Distance"],
+    datasets: [{
+      data: [lastData[0].temp, lastData[0].distance],
+      backgroundColor: [
+        "rgba(255, 159, 64, 0.6)",
+        "rgba(255, 99, 132, 0.6)",
+      ],
+    }],
+  } : null;
+
+  const barChartData1 = allData.length > 0 ? {
     labels: allData.map((dataPoint) =>
       new Date(dataPoint.date).toLocaleString("th-TH", {
         timeZone: "Asia/Bangkok",
@@ -77,9 +96,36 @@ export default function Dashboard() {
     ),
     datasets: [
       {
+        label: "LDR",
+        data: allData.map((dataPoint) => dataPoint.ldr),
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
+      },
+      {
+        label: "VR",
+        data: allData.map((dataPoint) => dataPoint.vr),
+        backgroundColor: "rgba(153, 102, 255, 0.6)",
+      },
+    ],
+  } : null;
+
+  const barChartData2 = allData.length > 0 ? {
+    labels: allData.map((dataPoint) =>
+      new Date(dataPoint.date).toLocaleString("th-TH", {
+        timeZone: "Asia/Bangkok",
+        dateStyle: "short",
+        timeStyle: "short",
+      })
+    ),
+    datasets: [
+      {
+        label: "Temperature",
+        data: allData.map((dataPoint) => dataPoint.temp),
+        backgroundColor: "rgba(255, 159, 64, 0.6)",
+      },
+      {
         label: "Distance",
-        data: allData.map((dataPoint) => dataPoint.distance), // ใช้ค่าระยะทางจากเซ็นเซอร์ VR ADC
-        backgroundColor: "rgba(255, 99, 132, 0.6)",
+        data: allData.map((dataPoint) => dataPoint.distance),
+        backgroundColor: "rgb(255, 99, 132, 0.6)",
       },
     ],
   } : null;
@@ -92,7 +138,7 @@ export default function Dashboard() {
       },
       title: {
         display: true,
-        text: "Distance Data Visualization",
+        text: "Latest Sensor Data Visualization",
       },
     },
   };
@@ -105,18 +151,35 @@ export default function Dashboard() {
       },
       title: {
         display: true,
-        text: "Distance Trends Over Time",
+        text: "Sensor Data Trends Over Time",
       },
     },
   };
 
+  function downloadCSV(data, filename) {
+    const csvData = data.map((row) =>
+      Object.values(row).join(",")
+    );
+    const csvContent =
+      "data:text/csv;charset=utf-8," + csvData.join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   useEffect(() => {
     fetchLastData();
     fetchAllData();
+    fetchAttackCount();
 
     const intervalId = setInterval(() => {
       fetchLastData();
       fetchAllData();
+      fetchAttackCount();
     }, 10000);
 
     return () => clearInterval(intervalId);
@@ -128,26 +191,94 @@ export default function Dashboard() {
         Dashboard
       </h1>
       <div className="tab-content" id="chartTabsContent">
-        <div className="tab-pane fade show active" id="distance" role="tabpanel" aria-labelledby="distance-tab">
-          {barChartData ? (
+        <div
+          className="tab-pane fade show active"
+          id="ldr-vr"
+          role="tabpanel"
+          aria-labelledby="ldr-vr-tab"
+        >
+          {lastData.length > 0 && pieChartData1 ? (
             <div className={styles.chartContainer}>
-              <h2>Latest Distance Data</h2>
-              <Bar data={barChartData} options={chartOptions} />
+              <h2>LDR and VR</h2>
+              <Pie data={pieChartData1} options={chartOptions} />
             </div>
           ) : (
-            <p>No data available for Distance chart</p>
+            <p>No data available for LDR and VR chart</p>
           )}
         </div>
-        <div className="tab-pane fade" id="trend-distance" role="tabpanel" aria-labelledby="trend-distance-tab">
-          {barChartTrendData ? (
+        <div
+          className="tab-pane fade"
+          id="temp-distance"
+          role="tabpanel"
+          aria-labelledby="temp-distance-tab"
+        >
+          {lastData.length > 0 && pieChartData2 ? (
             <div className={styles.chartContainer}>
-              <h2>Distance Trends</h2>
-              <Bar data={barChartTrendData} options={barChartOptions} />
+              <h2>Temperature and Distance</h2>
+              <Pie data={pieChartData2} options={chartOptions} />
             </div>
           ) : (
-            <p>No data available for Distance trends chart</p>
+            <p>No data available for Temperature and Distance chart</p>
           )}
         </div>
+        <div
+          className="tab-pane fade"
+          id="trend-ldr-vr"
+          role="tabpanel"
+          aria-labelledby="trend-ldr-vr-tab"
+        >
+          {allData.length > 0 && barChartData1 ? (
+            <div className={styles.chartContainer}>
+              <h2>LDR and VR Trends</h2>
+              <Bar data={barChartData1} options={barChartOptions} />
+            </div>
+          ) : (
+            <p>No data available for the LDR and VR bar chart</p>
+          )}
+        </div>
+        <div
+          className="tab-pane fade"
+          id="trend-temp-distance"
+          role="tabpanel"
+          aria-labelledby="trend-temp-distance-tab"
+        >
+          {allData.length > 0 && barChartData2 ? (
+            <div className={styles.chartContainer}>
+              <h2>Temperature and Distance Trends</h2>
+              <Bar data={barChartData2} options={barChartOptions} />
+            </div>
+          ) : (
+            <p>No data available for the Temperature and Distance bar chart</p>
+          )}
+        </div>
+      </div>
+      
+      <h2 className={`${styles.heading} text-center my-4`}>
+        ข้อมูลล่าสุด
+      </h2>
+      <div className="table-responsive">
+        <table
+          className={`table table-striped table-bordered ${styles.table}`}
+        >
+          <tbody>
+            {lastData.map((ldata) => (
+              <tr key={ldata.id}>
+                <td>{ldata.id}</td>
+                <td>{ldata.ldr}</td>
+                <td>{ldata.vr}</td>
+                <td>{ldata.temp}</td>
+                <td>{ldata.distance}</td>
+                <td>
+                  {new Date(ldata.date).toLocaleString("th-TH", {
+                    timeZone: "Asia/Bangkok",
+                    dateStyle: "short",
+                    timeStyle: "short",
+                  })}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
