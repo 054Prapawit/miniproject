@@ -30,7 +30,10 @@ export default function Dashboard() {
 
   async function fetchLastData() {
     try {
-      const res = await fetch("/api/lastestData");
+      const res = await fetch("/api/lastestData"); // เรียก API ที่ให้ข้อมูลล่าสุด
+      if (!res.ok) {
+        throw new Error(`Error: ${res.status}`);
+      }
       const data = await res.json();
       setLastData(data);
       console.log("Latest Data:", data);
@@ -41,7 +44,10 @@ export default function Dashboard() {
 
   async function fetchAllData() {
     try {
-      const res = await fetch("/api/alldata");
+      const res = await fetch("/api/alldata"); // เรียก API ที่ให้ข้อมูลทั้งหมด
+      if (!res.ok) {
+        throw new Error(`Error: ${res.status}`);
+      }
       const data = await res.json();
       setAllData(data);
       console.log("All Data:", data);
@@ -50,15 +56,17 @@ export default function Dashboard() {
     }
   }
 
+  // สร้างข้อมูลกราฟสำหรับข้อมูลล่าสุด
   const barChartData = lastData.length > 0 ? {
     labels: ["Distance"],
     datasets: [{
       label: "Distance",
-      data: [lastData[0].distance],
+      data: [lastData[0]?.distance ?? 0], // ป้องกันกรณีที่ข้อมูลว่าง
       backgroundColor: "rgba(255, 99, 132, 0.6)",
     }],
   } : null;
 
+  // สร้างข้อมูลกราฟสำหรับข้อมูลแนวโน้มทั้งหมด
   const barChartTrendData = allData.length > 0 ? {
     labels: allData.map((dataPoint) =>
       new Date(dataPoint.date).toLocaleString("th-TH", {
@@ -121,7 +129,7 @@ export default function Dashboard() {
       </h1>
       <div className="tab-content" id="chartTabsContent">
         <div className="tab-pane fade show active" id="distance" role="tabpanel" aria-labelledby="distance-tab">
-          {lastData.length > 0 && barChartData ? (
+          {barChartData ? (
             <div className={styles.chartContainer}>
               <h2>Latest Distance Data</h2>
               <Bar data={barChartData} options={chartOptions} />
@@ -131,7 +139,7 @@ export default function Dashboard() {
           )}
         </div>
         <div className="tab-pane fade" id="trend-distance" role="tabpanel" aria-labelledby="trend-distance-tab">
-          {allData.length > 0 && barChartTrendData ? (
+          {barChartTrendData ? (
             <div className={styles.chartContainer}>
               <h2>Distance Trends</h2>
               <Bar data={barChartTrendData} options={barChartOptions} />
