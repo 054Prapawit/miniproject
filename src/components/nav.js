@@ -60,9 +60,9 @@ const Navbar = () => {
       <div className="container-fluid">
         <Link className="navbar-brand d-flex align-items-center" href="./">
           <Image
-            src="/logo.png" // ใส่พาธรูปภาพที่คุณต้องการใช้แทนที่ "IohmRGB"
+            src="/logo.png"
             alt="Logo"
-            width={100} // กำหนดขนาดตามที่คุณต้องการ
+            width={100}
             height={100}
           />
         </Link>
@@ -72,10 +72,10 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ms-auto mb-4 mb-lg-0">
             <li className="nav-item">
-              <Link className={`nav-link ${styles.navLink}`} href="./">Dashboard</Link>
+              <Link className={`nav-link ${styles.navLink}`} href="./"></Link>
             </li>
             <li className="nav-item">
-              <Link className={`nav-link ${styles.navLink}`} href="/History">History</Link>
+              <Link className={`nav-link ${styles.navLink}`} href="/History">ประวัติ</Link>
             </li>
           </ul>
           <form className="d-flex align-items-center">
@@ -91,7 +91,7 @@ const Navbar = () => {
               }}
             onClick={() => updateLEDStatus('RGB_ON', setLEDStatus)}
 >
-              Open System
+              เปิดระบบ
           </button>
           <button
             type="button"
