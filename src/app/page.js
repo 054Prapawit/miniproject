@@ -30,7 +30,7 @@ export default function Dashboard() {
 
   async function fetchLastData() {
     try {
-      const res = await fetch("/api/lastestData"); // เรียก API ที่ให้ข้อมูลล่าสุด
+      const res = await fetch("/api/latestData"); // เรียก API ที่ให้ข้อมูลล่าสุดจากเซ็นเซอร์ VR ADC
       if (!res.ok) {
         throw new Error(`Error: ${res.status}`);
       }
@@ -44,7 +44,7 @@ export default function Dashboard() {
 
   async function fetchAllData() {
     try {
-      const res = await fetch("/api/alldata"); // เรียก API ที่ให้ข้อมูลทั้งหมด
+      const res = await fetch("/api/alldata"); // เรียก API ที่ให้ข้อมูลทั้งหมดจากเซ็นเซอร์ VR ADC
       if (!res.ok) {
         throw new Error(`Error: ${res.status}`);
       }
@@ -61,7 +61,7 @@ export default function Dashboard() {
     labels: ["Distance"],
     datasets: [{
       label: "Distance",
-      data: [lastData[0]?.distance ?? 0], // ป้องกันกรณีที่ข้อมูลว่าง
+      data: [lastData[0]?.distance ?? 0], // ใช้ค่าระยะทางจากเซ็นเซอร์ VR ADC
       backgroundColor: "rgba(255, 99, 132, 0.6)",
     }],
   } : null;
@@ -78,7 +78,7 @@ export default function Dashboard() {
     datasets: [
       {
         label: "Distance",
-        data: allData.map((dataPoint) => dataPoint.distance),
+        data: allData.map((dataPoint) => dataPoint.distance), // ใช้ค่าระยะทางจากเซ็นเซอร์ VR ADC
         backgroundColor: "rgba(255, 99, 132, 0.6)",
       },
     ],
