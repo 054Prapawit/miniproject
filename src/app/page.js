@@ -1,12 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Bar, Pie } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
-  ArcElement,
   Title,
   Tooltip,
   Legend,
@@ -20,7 +19,6 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  ArcElement,
   Title,
   Tooltip,
   Legend
@@ -52,17 +50,16 @@ export default function Dashboard() {
     }
   }
 
-  const pieChartData = lastData.length > 0 ? {
-    labels: ["VR"],
+  const barChartData = lastData.length > 0 ? {
+    labels: ["VR"], // แสดงเฉพาะข้อมูล VR
     datasets: [{
-      data: [lastData[0].vr], // แสดงเฉพาะข้อมูลของ VR
-      backgroundColor: [
-        "rgba(153, 102, 255, 0.6)",
-      ],
+      label: "VR",
+      data: [lastData[0].vr], // แสดงข้อมูล VR ล่าสุด
+      backgroundColor: "rgba(153, 102, 255, 0.6)",
     }],
   } : null;
 
-  const barChartData = allData.length > 0 ? {
+  const barChartDataTrends = allData.length > 0 ? {
     labels: allData.map((dataPoint) =>
       new Date(dataPoint.date).toLocaleString("th-TH", {
         timeZone: "Asia/Bangkok",
@@ -129,10 +126,10 @@ export default function Dashboard() {
           role="tabpanel"
           aria-labelledby="vr-tab"
         >
-          {lastData.length > 0 && pieChartData ? (
+          {lastData.length > 0 && barChartData ? (
             <div className={styles.chartContainer}>
               <h2>VR</h2>
-              <Pie data={pieChartData} options={chartOptions} />
+              <Bar data={barChartData} options={chartOptions} />
             </div>
           ) : (
             <p>No data available for VR chart</p>
@@ -144,10 +141,10 @@ export default function Dashboard() {
           role="tabpanel"
           aria-labelledby="trend-vr-tab"
         >
-          {allData.length > 0 && barChartData ? (
+          {allData.length > 0 && barChartDataTrends ? (
             <div className={styles.chartContainer}>
               <h2>VR Trends</h2>
-              <Bar data={barChartData} options={barChartOptions} />
+              <Bar data={barChartDataTrends} options={barChartOptions} />
             </div>
           ) : (
             <p>No data available for the VR bar chart</p>
