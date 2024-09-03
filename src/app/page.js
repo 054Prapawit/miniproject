@@ -1,12 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Pie, Bar } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
-  ArcElement,
   Title,
   Tooltip,
   Legend,
@@ -20,7 +19,6 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
-  ArcElement,
   Title,
   Tooltip,
   Legend
@@ -52,9 +50,10 @@ export default function Dashboard() {
     }
   }
 
-  const pieChartData = lastData.length > 0 ? {
+  const barChartData = lastData.length > 0 ? {
     labels: ["Temperature", "Distance"],
     datasets: [{
+      label: "Values",
       data: [lastData[0].temp, lastData[0].distance],
       backgroundColor: [
         "rgba(255, 159, 64, 0.6)",
@@ -63,7 +62,7 @@ export default function Dashboard() {
     }],
   } : null;
 
-  const barChartData = allData.length > 0 ? {
+  const barChartTrendData = allData.length > 0 ? {
     labels: allData.map((dataPoint) =>
       new Date(dataPoint.date).toLocaleString("th-TH", {
         timeZone: "Asia/Bangkok",
@@ -130,20 +129,20 @@ export default function Dashboard() {
       </h1>
       <div className="tab-content" id="chartTabsContent">
         <div className="tab-pane fade show active" id="temp-distance" role="tabpanel" aria-labelledby="temp-distance-tab">
-          {lastData.length > 0 && pieChartData ? (
+          {lastData.length > 0 && barChartData ? (
             <div className={styles.chartContainer}>
-              <h2>อุณหภูมิ และ การวัดระยะ</h2>
-              <Pie data={pieChartData} options={chartOptions} />
+              <h2>Temperature and Distance</h2>
+              <Bar data={barChartData} options={chartOptions} />
             </div>
           ) : (
             <p>No data available for Temperature and Distance chart</p>
           )}
         </div>
         <div className="tab-pane fade" id="trend-temp-distance" role="tabpanel" aria-labelledby="trend-temp-distance-tab">
-          {allData.length > 0 && barChartData ? (
+          {allData.length > 0 && barChartTrendData ? (
             <div className={styles.chartContainer}>
               <h2>Temperature and Distance Trends</h2>
-              <Bar data={barChartData} options={barChartOptions} />
+              <Bar data={barChartTrendData} options={barChartOptions} />
             </div>
           ) : (
             <p>No data available for the Temperature and Distance bar chart</p>
