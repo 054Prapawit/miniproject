@@ -51,14 +51,11 @@ export default function Dashboard() {
   }
 
   const barChartData = lastData.length > 0 ? {
-    labels: ["Temperature", "Distance"],
+    labels: ["Distance"],
     datasets: [{
-      label: "Values",
-      data: [lastData[0].temp, lastData[0].distance],
-      backgroundColor: [
-        "rgba(255, 159, 64, 0.6)",
-        "rgba(255, 99, 132, 0.6)",
-      ],
+      label: "Distance",
+      data: [lastData[0].distance],
+      backgroundColor: "rgba(255, 99, 132, 0.6)",
     }],
   } : null;
 
@@ -71,11 +68,6 @@ export default function Dashboard() {
       })
     ),
     datasets: [
-      {
-        label: "Temperature",
-        data: allData.map((dataPoint) => dataPoint.temp),
-        backgroundColor: "rgba(255, 159, 64, 0.6)",
-      },
       {
         label: "Distance",
         data: allData.map((dataPoint) => dataPoint.distance),
@@ -92,7 +84,7 @@ export default function Dashboard() {
       },
       title: {
         display: true,
-        text: "Temperature and Distance Data Visualization",
+        text: "Distance Data Visualization",
       },
     },
   };
@@ -105,7 +97,7 @@ export default function Dashboard() {
       },
       title: {
         display: true,
-        text: "Temperature and Distance Trends Over Time",
+        text: "Distance Trends Over Time",
       },
     },
   };
@@ -128,24 +120,24 @@ export default function Dashboard() {
         Dashboard
       </h1>
       <div className="tab-content" id="chartTabsContent">
-        <div className="tab-pane fade show active" id="temp-distance" role="tabpanel" aria-labelledby="temp-distance-tab">
+        <div className="tab-pane fade show active" id="distance" role="tabpanel" aria-labelledby="distance-tab">
           {lastData.length > 0 && barChartData ? (
             <div className={styles.chartContainer}>
-              <h2>Temperature and Distance</h2>
+              <h2>Latest Distance Data</h2>
               <Bar data={barChartData} options={chartOptions} />
             </div>
           ) : (
-            <p>No data available for Temperature and Distance chart</p>
+            <p>No data available for Distance chart</p>
           )}
         </div>
-        <div className="tab-pane fade" id="trend-temp-distance" role="tabpanel" aria-labelledby="trend-temp-distance-tab">
+        <div className="tab-pane fade" id="trend-distance" role="tabpanel" aria-labelledby="trend-distance-tab">
           {allData.length > 0 && barChartTrendData ? (
             <div className={styles.chartContainer}>
-              <h2>Temperature and Distance Trends</h2>
+              <h2>Distance Trends</h2>
               <Bar data={barChartTrendData} options={barChartOptions} />
             </div>
           ) : (
-            <p>No data available for the Temperature and Distance bar chart</p>
+            <p>No data available for Distance trends chart</p>
           )}
         </div>
       </div>
