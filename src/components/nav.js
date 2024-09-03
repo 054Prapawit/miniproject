@@ -62,8 +62,8 @@ const Navbar = () => {
           <Image
             src="/logo.png"
             alt="Logo"
-            width={100}
-            height={100}
+            width={180}
+            height={180}
           />
         </Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
