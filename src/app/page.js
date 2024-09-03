@@ -53,7 +53,7 @@ export default function Dashboard() {
   }
 
   const pieChartData = lastData.length > 0 ? {
-    labels: ["Temperature", "Distance"],
+    labels: ["Distance", "Temperature"],
     datasets: [{
       data: [lastData[0].temp, lastData[0].distance],
       backgroundColor: [
