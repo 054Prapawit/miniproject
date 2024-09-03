@@ -1,9 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Pie } from "react-chartjs-2";
+import { Pie, Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
   ArcElement,
+  BarElement,
+  LineElement,
+  PointElement,
+  Title,
   Tooltip,
   Legend,
 } from "chart.js";
@@ -13,7 +19,13 @@ import styles from "./Dashboard.module.css";
 export const dynamic = "force-dynamic";
 
 ChartJS.register(
-  ArcElement,
+  CategoryScale,
+  LinearScale,
+  ArcElement,  // Register ArcElement for Pie charts
+  BarElement,
+  LineElement,
+  PointElement,
+  Title,
   Tooltip,
   Legend
 );
@@ -56,11 +68,11 @@ export default function Dashboard() {
     }
   }
 
-  const pieChartData1 = lastData.length > 0 ? {
+  const chartData1 = lastData.length > 0 ? {
     labels: ["LDR", "VR"],
     datasets: [{
-      label: 'Sensor Data',
-      data: [lastData[0].ldr, lastData[0].vr], // ใช้ข้อมูลล่าสุดหรือตามที่ต้องการ
+      label: "Latest Sensor Data",
+      data: [lastData[0].ldr, lastData[0].vr],  // Assuming you're using the most recent data
       backgroundColor: [
         "rgba(75, 192, 192, 0.6)",
         "rgba(153, 102, 255, 0.6)",
@@ -68,16 +80,68 @@ export default function Dashboard() {
     }],
   } : null;
 
-  const pieChartData2 = lastData.length > 0 ? {
+  const chartData2 = lastData.length > 0 ? {
     labels: ["Temperature", "Distance"],
     datasets: [{
-      label: 'Sensor Data',
-      data: [lastData[0].temp, lastData[0].distance], // ใช้ข้อมูลล่าสุดหรือตามที่ต้องการ
+      label: "Latest Sensor Data",
+      data: [lastData[0].temp, lastData[0].distance],  // Assuming you're using the most recent data
       backgroundColor: [
         "rgba(255, 159, 64, 0.6)",
         "rgba(255, 99, 132, 0.6)",
       ],
     }],
+  } : null;
+
+  const lineChartData1 = allData.length > 0 ? {
+    labels: allData.map((dataPoint) =>
+      new Date(dataPoint.date).toLocaleString("th-TH", {
+        timeZone: "Asia/Bangkok",
+        dateStyle: "short",
+        timeStyle: "short",
+      })
+    ),
+    datasets: [
+      {
+        label: "LDR",
+        data: allData.map((dataPoint) => dataPoint.ldr),
+        fill: false,
+        borderColor: "rgba(75, 192, 192, 0.6)",
+        tension: 0.1,
+      },
+      {
+        label: "VR",
+        data: allData.map((dataPoint) => dataPoint.vr),
+        fill: false,
+        borderColor: "rgba(153, 102, 255, 0.6)",
+        tension: 0.1,
+      },
+    ],
+  } : null;
+
+  const lineChartData2 = allData.length > 0 ? {
+    labels: allData.map((dataPoint) =>
+      new Date(dataPoint.date).toLocaleString("th-TH", {
+        timeZone: "Asia/Bangkok",
+        dateStyle: "short",
+        timeStyle: "short",
+      })
+    ),
+    datasets: [
+      {
+        label: "Temperature",
+        data: allData.map((dataPoint) => dataPoint.temp),
+        fill: false,
+        borderColor: "rgba(255, 159, 64, 0.6)",
+        tension: 0.1,
+      },
+      {
+        label: "Distance",
+        data: allData.map((dataPoint) => dataPoint.distance),
+        fill: false,
+        borderColor: "rgba(255, 99, 132, 0.6)",
+        tension: 0.1,
+      },
+    ],
   } : null;
 
   const chartOptions = {
@@ -89,6 +153,19 @@ export default function Dashboard() {
       title: {
         display: true,
         text: "Latest Sensor Data Visualization",
+      },
+    },
+  };
+
+  const lineChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Sensor Data Trends Over Time",
       },
     },
   };
@@ -156,7 +233,34 @@ export default function Dashboard() {
             Temperature and Distance
           </button>
         </li>
-        {/* อื่น ๆ */}
+        <li className="nav-item" role="presentation">
+          <button
+            className="nav-link"
+            id="trend-ldr-vr-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#trend-ldr-vr"
+            type="button"
+            role="tab"
+            aria-controls="trend-ldr-vr"
+            aria-selected="false"
+          >
+            LDR and VR Trends
+          </button>
+        </li>
+        <li className="nav-item" role="presentation">
+          <button
+            className="nav-link"
+            id="trend-temp-distance-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#trend-temp-distance"
+            type="button"
+            role="tab"
+            aria-controls="trend-temp-distance"
+            aria-selected="false"
+          >
+            Temperature and Distance Trends
+          </button>
+        </li>
       </ul>
       <div className="tab-content" id="chartTabsContent">
         <div
@@ -165,10 +269,10 @@ export default function Dashboard() {
           role="tabpanel"
           aria-labelledby="ldr-vr-tab"
         >
-          {lastData.length > 0 && pieChartData1 ? (
+          {lastData.length > 0 && chartData1 ? (
             <div className={styles.chartContainer}>
               <h2>LDR and VR</h2>
-              <Pie data={pieChartData1} options={chartOptions} />
+              <Pie data={chartData1} options={chartOptions} />
             </div>
           ) : (
             <p>No data available for LDR and VR chart</p>
@@ -180,16 +284,45 @@ export default function Dashboard() {
           role="tabpanel"
           aria-labelledby="temp-distance-tab"
         >
-          {lastData.length > 0 && pieChartData2 ? (
+          {lastData.length > 0 && chartData2 ? (
             <div className={styles.chartContainer}>
               <h2>Temperature and Distance</h2>
-              <Pie data={pieChartData2} options={chartOptions} />
+              <Pie data={chartData2} options={chartOptions} />
             </div>
           ) : (
             <p>No data available for Temperature and Distance chart</p>
           )}
         </div>
-        {/* อื่น ๆ */}
+        <div
+          className="tab-pane fade"
+          id="trend-ldr-vr"
+          role="tabpanel"
+          aria-labelledby="trend-ldr-vr-tab"
+        >
+          {allData.length > 0 && lineChartData1 ? (
+            <div className={styles.chartContainer}>
+              <h2>LDR and VR Trends</h2>
+              <Line data={lineChartData1} options={lineChartOptions} />
+            </div>
+          ) : (
+            <p>No data available for the LDR and VR line chart</p>
+          )}
+        </div>
+        <div
+          className="tab-pane fade"
+          id="trend-temp-distance"
+          role="tabpanel"
+          aria-labelledby="trend-temp-distance-tab"
+        >
+          {allData.length > 0 && lineChartData2 ? (
+            <div className={styles.chartContainer}>
+              <h2>Temperature and Distance Trends</h2>
+              <Line data={lineChartData2} options={lineChartOptions} />
+            </div>
+          ) : (
+            <p>No data available for the Temperature and Distance line chart</p>
+          )}
+        </div>
       </div>
 
       <h2 className={`${styles.heading} text-center my-4`}>
