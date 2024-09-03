@@ -1,6 +1,6 @@
 /* Button Styles */
 .btnCustom, .btnDanger {
-  color: rgb(226, 248, 255); /* Text color white */
+  color: rgb(0, 195, 255); /* Text color white */
   padding: 10px 25px;
   border-radius: 25px; /* Rounded corners */
   font-size: 1.2rem; /* Adjust font size here */
@@ -45,7 +45,7 @@
 /* LED Status Display */
 .ledStatusContainer {
   font-size: 1rem; /* Adjust size as needed */
-  color: #ffffff; /* Adjust color as needed */
+  color: #ff0000; /* Adjust color as needed */
   margin-top: 10px; /* Adjust spacing as needed */
 }
 /* Circular Button Style */

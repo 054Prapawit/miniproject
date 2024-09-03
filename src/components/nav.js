@@ -70,7 +70,7 @@ const Navbar = () => {
           <span className="navbar-toggler-icon" />
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+          <ul className="navbar-nav ms-auto mb-4 mb-lg-0">
             <li className="nav-item">
               <Link className={`nav-link ${styles.navLink}`} href="./">Dashboard</Link>
             </li>
