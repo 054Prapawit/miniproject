@@ -109,7 +109,7 @@ const Navbar = () => {
           </button>
 
             <span className={`ms-3 ${ledStatus ? styles.statusOn : styles.statusOff}`}>
-              {ledStatus ? 'LED is ON' : 'LED is OFF'}
+              {ledStatus ? 'System is ON' : 'System is OFF'}
             </span>
           </form>
         </div>
