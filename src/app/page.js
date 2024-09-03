@@ -73,12 +73,12 @@ export default function Dashboard() {
     ),
     datasets: [
       {
-        label: "อุณหภูมิ",
+        label: "Temperature",
         data: allData.map((dataPoint) => dataPoint.temp),
         backgroundColor: "rgba(255, 159, 64, 0.6)",
       },
       {
-        label: "ระยะ",
+        label: "Distance",
         data: allData.map((dataPoint) => dataPoint.distance),
         backgroundColor: "rgba(255, 99, 132, 0.6)",
       },
@@ -132,7 +132,7 @@ export default function Dashboard() {
         <div className="tab-pane fade show active" id="temp-distance" role="tabpanel" aria-labelledby="temp-distance-tab">
           {lastData.length > 0 && pieChartData ? (
             <div className={styles.chartContainer}>
-              <h2>อุณหภูมิ และ ระยะ</h2>
+              <h2>อุณหภูมิ และ การวัดระยะ</h2>
               <Pie data={pieChartData} options={chartOptions} />
             </div>
           ) : (
