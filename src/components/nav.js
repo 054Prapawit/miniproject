@@ -95,20 +95,6 @@ const Navbar = () => {
           </button>
           <button
             type="button"
-            className="btn me-2"
-              style={{
-              background: 'linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet)',
-              color: 'white',
-              border: '2px solid white', // เพิ่มกรอบสีขาวให้ปุ่ม
-              fontWeight: 'bold', // ทำให้ตัวหนังสือหนาขึ้น
-              textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
-            }}
-          onClick={() => updateLEDStatus('BUZZER_ON', setLEDStatus)}
->
-              Buzzer
-          </button>
-          <button
-            type="button"
               className="btn"
                 style={{
                 background: 'linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet)',
