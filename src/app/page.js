@@ -55,10 +55,10 @@ export default function Dashboard() {
   const pieChartData = lastData.length > 0 ? {
     labels: ["Temperature", "Distance"],
     datasets: [{
-      data: [lastData[0].distance, lastData[0].temp],
+      data: [lastData[0].temp, lastData[0].distance],
       backgroundColor: [
-        "rgba(255, 99, 132, 0.6)",
         "rgba(255, 159, 64, 0.6)",
+        "rgba(255, 99, 132, 0.6)",
       ],
     }],
   } : null;
@@ -73,12 +73,12 @@ export default function Dashboard() {
     ),
     datasets: [
       {
-        label: "Temperature",
+        label: "อุณหภูมิ",
         data: allData.map((dataPoint) => dataPoint.temp),
         backgroundColor: "rgba(255, 159, 64, 0.6)",
       },
       {
-        label: "Distance",
+        label: "ระยะ",
         data: allData.map((dataPoint) => dataPoint.distance),
         backgroundColor: "rgba(255, 99, 132, 0.6)",
       },
@@ -132,7 +132,7 @@ export default function Dashboard() {
         <div className="tab-pane fade show active" id="temp-distance" role="tabpanel" aria-labelledby="temp-distance-tab">
           {lastData.length > 0 && pieChartData ? (
             <div className={styles.chartContainer}>
-              <h2>Temperature and Distance</h2>
+              <h2>อุณหภูมิ และ ระยะ</h2>
               <Pie data={pieChartData} options={chartOptions} />
             </div>
           ) : (
