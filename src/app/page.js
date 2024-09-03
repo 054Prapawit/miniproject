@@ -30,7 +30,7 @@ export default function Dashboard() {
 
   async function fetchLastData() {
     try {
-      const res = await fetch("/api/lastestData");
+      const res = await fetch("/api/lastestData"); // เรียก API ที่ให้ข้อมูลล่าสุด
       const data = await res.json();
       setLastData(data);
       console.log("Latest Data:", data);
@@ -41,7 +41,7 @@ export default function Dashboard() {
 
   async function fetchAllData() {
     try {
-      const res = await fetch("/api/alldata");
+      const res = await fetch("/api/alldata"); // เรียก API ที่ให้ข้อมูลทั้งหมด
       const data = await res.json();
       setAllData(data);
       console.log("All Data:", data);
@@ -50,27 +50,25 @@ export default function Dashboard() {
     }
   }
 
-  // ข้อมูลกราฟสำหรับ VR
   const barChartDataVR = lastData.length > 0 ? {
-    labels: ["VR"],
+    labels: ["VR"], // แสดงเฉพาะข้อมูล VR
     datasets: [{
       label: "VR",
-      data: [lastData[0].vr],
+      data: [lastData[0].vr], // แสดงข้อมูล VR ล่าสุด
       backgroundColor: "rgba(153, 102, 255, 0.6)",
     }],
   } : null;
 
-  // ข้อมูลกราฟสำหรับอุณหภูมิ
   const barChartDataTemp = lastData.length > 0 ? {
-    labels: ["Temperature"],
+    labels: ["Temperature"], // แสดงเฉพาะข้อมูลอุณหภูมิ
     datasets: [{
       label: "Temperature",
-      data: [lastData[0].temp],
+      data: [lastData[0].temp], // แสดงข้อมูลอุณหภูมิล่าสุด
       backgroundColor: "rgba(255, 159, 64, 0.6)",
     }],
   } : null;
 
-  const barChartTrendDataVR = allData.length > 0 ? {
+  const barChartDataTrendsVR = allData.length > 0 ? {
     labels: allData.map((dataPoint) =>
       new Date(dataPoint.date).toLocaleString("th-TH", {
         timeZone: "Asia/Bangkok",
@@ -87,7 +85,7 @@ export default function Dashboard() {
     ],
   } : null;
 
-  const barChartTrendDataTemp = allData.length > 0 ? {
+  const barChartDataTrendsTemp = allData.length > 0 ? {
     labels: allData.map((dataPoint) =>
       new Date(dataPoint.date).toLocaleString("th-TH", {
         timeZone: "Asia/Bangkok",
@@ -112,7 +110,7 @@ export default function Dashboard() {
       },
       title: {
         display: true,
-        text: "Sensor Data Visualization",
+        text: "Data Visualization",
       },
     },
   };
@@ -125,7 +123,7 @@ export default function Dashboard() {
       },
       title: {
         display: true,
-        text: "Sensor Data Trends Over Time",
+        text: "Data Trends Over Time",
       },
     },
   };
@@ -154,9 +152,9 @@ export default function Dashboard() {
           role="tabpanel"
           aria-labelledby="vr-tab"
         >
-          {barChartDataVR ? (
+          {lastData.length > 0 && barChartDataVR ? (
             <div className={styles.chartContainer}>
-              <h2>Latest VR Data</h2>
+              <h2>VR</h2>
               <Bar data={barChartDataVR} options={chartOptions} />
             </div>
           ) : (
@@ -165,13 +163,13 @@ export default function Dashboard() {
         </div>
         <div
           className="tab-pane fade"
-          id="temp"
+          id="temperature"
           role="tabpanel"
-          aria-labelledby="temp-tab"
+          aria-labelledby="temperature-tab"
         >
-          {barChartDataTemp ? (
+          {lastData.length > 0 && barChartDataTemp ? (
             <div className={styles.chartContainer}>
-              <h2>Latest Temperature Data</h2>
+              <h2>Temperature</h2>
               <Bar data={barChartDataTemp} options={chartOptions} />
             </div>
           ) : (
@@ -184,30 +182,56 @@ export default function Dashboard() {
           role="tabpanel"
           aria-labelledby="trend-vr-tab"
         >
-          {barChartTrendDataVR ? (
+          {allData.length > 0 && barChartDataTrendsVR ? (
             <div className={styles.chartContainer}>
               <h2>VR Trends</h2>
-              <Bar data={barChartTrendDataVR} options={barChartOptions} />
+              <Bar data={barChartDataTrendsVR} options={barChartOptions} />
             </div>
           ) : (
-            <p>No data available for VR trends chart</p>
+            <p>No data available for the VR bar chart</p>
           )}
         </div>
         <div
           className="tab-pane fade"
-          id="trend-temp"
+          id="trend-temperature"
           role="tabpanel"
-          aria-labelledby="trend-temp-tab"
+          aria-labelledby="trend-temperature-tab"
         >
-          {barChartTrendDataTemp ? (
+          {allData.length > 0 && barChartDataTrendsTemp ? (
             <div className={styles.chartContainer}>
               <h2>Temperature Trends</h2>
-              <Bar data={barChartTrendDataTemp} options={barChartOptions} />
+              <Bar data={barChartDataTrendsTemp} options={barChartOptions} />
             </div>
           ) : (
-            <p>No data available for Temperature trends chart</p>
+            <p>No data available for the Temperature bar chart</p>
           )}
         </div>
+      </div>
+      
+      <h2 className={`${styles.heading} text-center my-4`}>
+        ข้อมูลล่าสุด
+      </h2>
+      <div className="table-responsive">
+        <table
+          className={`table table-striped table-bordered ${styles.table}`}
+        >
+          <tbody>
+            {lastData.map((ldata) => (
+              <tr key={ldata.id}>
+                <td>{ldata.id}</td>
+                <td>{ldata.vr}</td>
+                <td>{ldata.temp}</td>
+                <td>
+                  {new Date(ldata.date).toLocaleString("th-TH", {
+                    timeZone: "Asia/Bangkok",
+                    dateStyle: "short",
+                    timeStyle: "short",
+                  })}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
