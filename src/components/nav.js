@@ -78,21 +78,6 @@ const Navbar = () => {
               <Link className={`nav-link ${styles.navLink}`} href="/History">History</Link>
             </li>
           </ul>
-          <form className="d-flex align-items-center">
-          <button
-            type="button"
-            className="btn me-2"
-              style={{
-                background: 'linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet)',
-                color: 'white',
-                border: '2px solid white', // เพิ่มกรอบสีขาวให้ปุ่ม
-                fontWeight: 'bold', // ทำให้ตัวหนังสือหนาขึ้น  
-                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
-              }}
-            onClick={() => updateLEDStatus('RGB_ON', setLEDStatus)}
->
-              Open System
-          </button>
           <button
             type="button"
             className="btn me-2"
@@ -125,7 +110,6 @@ const Navbar = () => {
             <span className={`ms-3 ${ledStatus ? styles.statusOn : styles.statusOff}`}>
               {ledStatus ? 'LED is ON' : 'LED is OFF'}
             </span>
-          </form>
         </div>
       </div>
     </nav>
